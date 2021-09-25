@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/user.entity';
-import { Like, Repository, FindManyOptions } from 'typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
@@ -19,9 +19,11 @@ export class UserService {
   }
 
   //retrieve multiple users by id
-  //TODO: returns only one user so far
   async findMultipleUsersByID(query) {
-    return this.userRepository.findByIds(query.ids)
+    let users = await Promise.all(query.ids
+      .split(',')
+      .map(userID => this.userRepository.find( {id: userID} )))
+    return users
   }
 
   //retrieve single user by username
@@ -30,15 +32,12 @@ export class UserService {
   }
 
   //retrieve multiple users by username
-  async findMultipleUsersByUsername(username) {
-    return this.userRepository.find({ name: Like(`%${username}`) })
+  async findMultipleUsersByUsername(query) {
+    let users = await Promise.all(query.usernames
+      .split(',')
+      .map(username => this.userRepository.find( {name: username} )))
+    return users
   }
-
-  //find all users where user.description contains description-query
-  async findAllDescription(description) {
-    return this.userRepository.find({ description: Like(`%${description}%`) })
-  }
-
 
   //create User-Object with hashed pw and safe it to Database
   async createUser(body) {
@@ -48,6 +47,4 @@ export class UserService {
       body.password = hash;
       return this.userRepository.save(body);
   }
-
-
 }

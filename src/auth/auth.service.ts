@@ -12,7 +12,7 @@ export class AuthService {
 
     //TODO: change parameter username in authentication process to name for consistency reasons
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findUserAuthentication(username)
+    const user = await this.userService.findUserForAuthentication(username)
     if (user && await bcrypt.compare(pass, user.password)) {
       const {password, ... result} = user;
       return result

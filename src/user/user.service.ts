@@ -1,34 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/entities/user.entity';
-import { Repository, Connection } from 'typeorm';
+import { User, UserDocument } from 'src/schemas/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
 
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    private connection: Connection
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   //retrieve single user by id
   async findSingleUserByID(userID) {
-    return this.userRepository.find({ id: userID })
+    try {
+    return this.userModel.findById(userID)
+    } catch (err) {
+      return err.message
+    }
   }
 
   //retrieve multiple users by id
   async findMultipleUsersByID(query) {
-    let users = await Promise.all(query.ids
+    const users = await Promise.all(query.ids
       .split(',')
-      .map(userID => this.userRepository.find( {id: userID} )))
+      .map(userID => this.userModel.findById(userID))
+      )
     return users
   }
 
   //retrieve single user by username
   async findSingleUserbyUsername(username) {
-    return this.userRepository.find( {name: username})
+    return this.userModel.findOne({ name: username })
   }
 
   //retrieve multiple users by username
@@ -36,7 +37,7 @@ export class UserService {
     try {
     let users = await Promise.all(query.usernames
       .split(',')
-      .map(username => this.userRepository.find( {name: username} )))
+      .map(username => this.userModel.findOne( {name: username} )))
     return users
   } catch (err) {
     return err.message
@@ -50,15 +51,17 @@ export class UserService {
       const password = body.password;
       const hash = await bcrypt.hash(password, saltOrRounds);
       body.password = hash;
-      return this.userRepository.save(body);
+      const createdUser = new this.userModel(body);
+      return createdUser.save();
   }
 
   //find user by name and return password-hash for authentication
-  async findUserAuthentication(username) {
-    return await this.connection.getRepository(User)
-      .createQueryBuilder('user')
-      .where('user.name = :name', { name: username})
-      .addSelect('user.password')
-      .getOne()
+  async findUserForAuthentication(username) {
+    return await this.userModel.findOne({ name: username}).select('+password')
+    // return await this.connection.getRepository(User)
+    //   .createQueryBuilder('user')
+    //   .where('user.name = :name', { name: username})
+    //   .addSelect('user.password')
+    //   .getOne()
   }
 }

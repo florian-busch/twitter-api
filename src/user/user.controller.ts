@@ -1,20 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
+import { User } from 'src/schemas/user.schema';
 import { UserService } from './user.service';
-
+import { Types } from 'mongoose';
 @Controller('users')
 export class UserController {
 
   constructor(private userService: UserService) {}
 
   //retrieve multiple users by ids
-  //returns only one user --> debug!
   @Get()
   findMultipleUsersByID(@Query() query?: string): Promise<unknown> {
     return this.userService.findMultipleUsersByID(query)
   }
 
-  //find multiple users by username
+  //find multiple users by username --> localhost:3000/users/by?usernames=MongoTest,MongoTest2
   @Get('/by')
   findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
     try {
@@ -26,13 +25,17 @@ export class UserController {
 
   //find single user with id
   @Get('/:id')
-  findSingleUserByID(@Param() params): Promise<User[]> {
+  findSingleUserByID(@Param() params): Promise<User> | string {
+    if (Types.ObjectId.isValid(params.id)) {
     return this.userService.findSingleUserByID(params.id)
+    } else {
+      return 'No valid id'
+    }
   }
 
   //find single user by username
   @Get('/by/username/:username')
-  findSingleUserbyUsername(@Param() params): Promise<User[]> {
+  findSingleUserbyUsername(@Param() params): Promise<User> {
     return this.userService.findSingleUserbyUsername(params.username)
   }
 

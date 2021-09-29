@@ -1,13 +1,15 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Body, Get, Param, Post } from '@nestjs/common';
+import { TweetService } from './tweet.service';
 
-@Controller('tweet')
+@Controller('statuses')
 export class TweetController {
 
-  @Get(':topic')
-  findAll(@Param() params): string {
-    console.log(params.topic)
-    return `This gets all tweets with topic ${params.topic}`
-  }
+  constructor(private tweetService: TweetService) {}
 
+  // //post one tweet
+  // @Post('/update')
+  // async postTweet(@Body() body: Tweet): Promise<Tweet> {
+  //   return this.tweetService.postTweet(body)
+  // }
 
 }

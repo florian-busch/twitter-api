@@ -11,14 +11,16 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
-    return this.authService.login(req.user)
+    return this.authService.login(req.user);
   }
- 
+
   //for testing if authentication works
   @UseGuards(JwtAuthGuard)
   @Get('authtest')
-  returner() {
-    return 'Authentication works'
+  returner(@Request() req) {
+    console.log(req.user)
+    console.log(req.user.userId)
+    return 'Authentication works';
   }
 
 }

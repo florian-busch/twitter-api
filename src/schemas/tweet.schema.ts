@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { User } from './user.schema';
 
 export type TweetDocument = Tweet & Document;
@@ -11,7 +11,7 @@ export class Tweet {
   created_at: string;
 
   //TODO: id_str should be ObjectId to string
-  @Prop({ select: false })
+  @Prop()
   id_str: string;
 
   @Prop({ required: true })
@@ -24,13 +24,13 @@ export class Tweet {
   truncated: boolean;
 
   @Prop()
-  in_reply_to_status_id: BigInt64Array;
+  in_reply_to_status_id: number;
 
   @Prop()
   in_reply_to_status_id_str: string;
 
   @Prop()
-  in_reply_to_user_id: BigInt64Array;
+  in_reply_to_user_id: number;
 
   @Prop()
   in_reply_to_user_id_str: string;
@@ -39,12 +39,12 @@ export class Tweet {
   in_reply_to_screen_name: string;
 
   //User who posted this tweet --> holds whole user object
-  @Prop({ required: true })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   user: User;
 
-  //formatted as geoJSON
+  //formatted as geoJSON --> should be type GeolocationCoordinates
   @Prop()
-  coordinates: GeolocationCoordinates;
+  coordinates: string;
 
   @Prop()
   place: string;
@@ -61,13 +61,13 @@ export class Tweet {
   @Prop()
   is_quote_status: boolean;
 
-  //holds original tweet if tweet is quoted
+  //holds original tweet if tweet is quoted --> should be of type Tweet
   @Prop()
-  quoted_status: Tweet;,
+  quoted_status: string;
 
-  //holds original tweet if tweet is retweeted
+  //holds original tweet if tweet is retweeted --> should be of type Tweet
   @Prop()
-  retweeted_status: Tweet;
+  retweeted_status: string;
 
   @Prop()
   quote_count: number;
@@ -84,7 +84,7 @@ export class Tweet {
 
   //Important: Entities which have been parsed out of the text of the tweet(hashtags, urls, symbols, polls)
   @Prop()
-  entities: JSON;
+  entities: string;
 
   @Prop()
   extended_entities: number;
@@ -109,7 +109,6 @@ export class Tweet {
   //type: array of rules object
   @Prop()
   matching_rules: string;
-  
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const TweetSchema = SchemaFactory.createForClass(Tweet);

@@ -35,12 +35,14 @@ export class UserService {
   //retrieve multiple users by username
   async findMultipleUsersByUsername(query) {
     try {
-    let users = await Promise.all(query.usernames
-      .split(',')
-      .map(username => this.userModel.findOne( {name: username} )))
-    return users
+      const users = await Promise.all(
+        query.usernames
+          .split(',')
+          .map((username) => this.userModel.findOne({ name: username })),
+      );
+      return users;
   } catch (err) {
-    return err.message
+    return err.message;
   }
 }
 

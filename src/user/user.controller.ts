@@ -36,23 +36,23 @@ export class UserController {
   //find single user by username
   @Get('/by/username/:username')
   findSingleUserbyUsername(@Param() params): Promise<User> {
-    return this.userService.findSingleUserbyUsername(params.username)
+    return this.userService.findSingleUserbyUsername(params.username);
   }
 
   //create a User-Account
   @Post()
   async createOne(@Body() body: User): Promise<string> {
     try {
-    await this.userService.createUser(body)
-    return 'User created'
+    await this.userService.createUser(body);
+    return 'User created';
     } catch (err) {
-      return err.message
+      return err.message;
     }
   }
 
   @Delete()
   deleteOne(): string {
-    return 'This deletes one User'
+    return 'This deletes one User';
   }
 
   @Put()

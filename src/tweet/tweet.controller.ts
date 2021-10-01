@@ -8,6 +8,18 @@ export class TweetController {
 
   constructor(private tweetService: TweetService) {}
 
+  //get one tweet by id
+  @Get('/show/:id')
+  async getOneTweet(@Param() params): Promise<Tweet> {
+    return this.tweetService.getTweetById(params.id);
+  }
+
+  //get multiple Tweets by ID
+  @Get('/lookup/:ids')
+  async getMultipleTweetsById(@Param() params): Promise<any> {
+    return this.tweetService.getMultipleTweetsById(params.ids);
+  }
+
   //post one tweet
   @UseGuards(JwtAuthGuard)
   @Post('/update')

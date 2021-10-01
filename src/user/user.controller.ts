@@ -17,11 +17,11 @@ export class UserController {
   @Get('/by')
   findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
     try {
-    return this.userService.findMultipleUsersByUsername(query)
-  } catch (err) {
-    return err.message
+      return this.userService.findMultipleUsersByUsername(query);
+    } catch (err) {
+      return err.message;
+    }
   }
-}
 
   //find single user with id
   @Get('/:id')

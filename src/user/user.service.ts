@@ -59,11 +59,6 @@ export class UserService {
 
   //find user by name and return password-hash for authentication
   async findUserForAuthentication(username) {
-    return await this.userModel.findOne({ name: username}).select('+password')
-    // return await this.connection.getRepository(User)
-    //   .createQueryBuilder('user')
-    //   .where('user.name = :name', { name: username})
-    //   .addSelect('user.password')
-    //   .getOne()
+    return await this.userModel.findOne({ name: username }).select('+password');
   }
 }

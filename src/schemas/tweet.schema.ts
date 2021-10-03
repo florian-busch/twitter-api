@@ -6,7 +6,7 @@ export type TweetDocument = Tweet & Document;
 
 @Schema()
 export class Tweet {
-  //TODO: has to be unique
+  //TODO: should be of type date and ISO 8601. Problem: date.toISOString() returns string
   @Prop({ required: true })
   created_at: string;
 
@@ -40,7 +40,7 @@ export class Tweet {
 
   //User who posted this tweet --> holds whole user object
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  user: User;
+  author_id: User;
 
   //formatted as geoJSON --> should be type GeolocationCoordinates
   @Prop()

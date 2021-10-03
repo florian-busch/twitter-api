@@ -1,23 +1,21 @@
-import { Controller, Body, Get, Param, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards, Request, Query } from '@nestjs/common';
 import { TweetService } from './tweet.service';
-import { Tweet } from '../schemas/tweet.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('statuses')
+@Controller('2/tweets')
 export class TweetController {
-
   constructor(private tweetService: TweetService) {}
 
-  //get one tweet by id
-  @Get('/show/:id')
-  async getOneTweet(@Param() params): Promise<Tweet> {
-    return this.tweetService.getTweetById(params.id);
+  //get one or multiple Tweets by ID
+  @Get('/:ids')
+  async getTweetsById(@Param() params): Promise<unknown> {
+    return this.tweetService.getTweetsById(params.ids);
   }
 
-  //get multiple Tweets by ID
-  @Get('/lookup/:ids')
-  async getMultipleTweetsById(@Param() params): Promise<any> {
-    return this.tweetService.getMultipleTweetsById(params.ids);
+  //search for tweets published in the last 7 days
+  @Get('/search/recent')
+  async getRecentTweets(@Query() query?: string): Promise<unknown> {
+    return this.tweetService.getRecentTweets(query);
   }
 
   //post one tweet
@@ -26,5 +24,4 @@ export class TweetController {
   async postTweet(@Request() req: any): Promise<any> {
     return this.tweetService.postTweet(req);
   }
-
 }

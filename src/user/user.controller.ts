@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { User } from 'src/schemas/user.schema';
 import { UserService } from './user.service';
 import { Types } from 'mongoose';
-@Controller('users')
+@Controller('2/users')
 export class UserController {
 
   constructor(private userService: UserService) {}

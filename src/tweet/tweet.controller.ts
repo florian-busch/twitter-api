@@ -18,6 +18,11 @@ export class TweetController {
     return this.tweetService.getRecentTweets(query);
   }
 
+  @Get('/:id/liking_users')
+  async getTweetsLikingUsers(@Param() params): Promise<unknown> {
+    return this.tweetService.getTweetsLikingUsers(params.id);
+  }
+
   //post one tweet
   @UseGuards(JwtAuthGuard)
   @Post('/update')

@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, Request } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
 import { UserService } from './user.service';
 import { Types } from 'mongoose';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
+
 @Controller('2/users')
 export class UserController {
-
   constructor(private userService: UserService) {}
 
   //retrieve multiple users by ids
@@ -38,6 +40,23 @@ export class UserController {
   findSingleUserbyUsername(@Param() params): Promise<User> {
     return this.userService.findSingleUserbyUsername(params.username);
   }
+
+  //like a tweet -> :id is userId; tweetId comes via json
+  @UseGuards(JwtAuthGuard)
+  @Post('/:id/likes')
+  async likeTweet(
+    @Param('id', new ParseObjectIdPipe()) id: string,
+    @Body() body: any,
+    @Request() req: any,
+  ) {
+    //check if userId from params equals userId from JwT-Token
+    if (id == req.user.userId) {
+      return this.userService.likeTweet(id, body.tweetId);
+    } else {
+      return 'User authentication failed';
+    }
+  }
+
 
   //create a User-Account
   @Post()

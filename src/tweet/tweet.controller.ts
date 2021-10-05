@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Post, UseGuards, Request, Query } from '@nestjs/common';
 import { TweetService } from './tweet.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
 
 @Controller('2/tweets')
 export class TweetController {
@@ -19,8 +20,8 @@ export class TweetController {
   }
 
   @Get('/:id/liking_users')
-  async getTweetsLikingUsers(@Param() params): Promise<unknown> {
-    return this.tweetService.getTweetsLikingUsers(params.id);
+  async getTweetsLikingUsers(@Param('id', new ParseObjectIdPipe()) params): Promise<unknown> {
+    return this.tweetService.getTweetsLikingUsers(params);
   }
 
   //post one tweet

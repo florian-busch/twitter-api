@@ -53,12 +53,7 @@ export class TweetService {
 
   //TODO: #8 implement data-fields like here: https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users
   async getTweetsLikingUsers(tweetId) {
-    if (Types.ObjectId.isValid(tweetId)) {
-      const tweet = this.tweetModel.find({ _id: tweetId });
-      return tweet;
-    } else {
-      return 'No valid ObjectId';
-    }
+    return this.tweetModel.find({ _id: tweetId });
   }
 
   //post Tweet and auto-populate Tweet.user by users ObjectId

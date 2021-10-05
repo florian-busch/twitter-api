@@ -41,7 +41,18 @@ export class UserService {
       return users;
     } catch (err) {
       return err.message;
-   }
+    }
+  }
+
+  //TODO: Where to save the like of an user?
+  async likeTweet(userId, tweetId) {
+    console.log('tweetId' + tweetId);
+    console.log('userId' + userId);
+    return {
+      data: {
+        liked: true,
+      },
+    };
   }
 
   //Login and Auth Routes#############################################################################

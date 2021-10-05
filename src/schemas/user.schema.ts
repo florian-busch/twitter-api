@@ -5,7 +5,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  //TODO: has to be unique
+  //TODO: #7 User.name has to be unique
   @Prop({ required: true })
   name: string;
 

@@ -36,6 +36,7 @@ export class TweetService {
     const s = query.query;
     const regex = new RegExp(s, 'i');
 
+    //TODO: #9 getRecentTweets returns all tweets with matching query, not only those from 7 or less days ago
     //date from week ago for created_at query
     const date = new Date();
     const minusSevenDays = date.setDate(date.getDate() - 7);
@@ -58,11 +59,16 @@ export class TweetService {
 
   //post Tweet and auto-populate Tweet.user by users ObjectId
   async postTweet(req) {
+    try {
     const tweet = new this.tweetModel(req.body);
     tweet.author_id = req.user.userId;
     tweet.created_at = new Date().toISOString();
     //TODO: is populate needed here? return value in production won't be tweet but success message; ID already is saved
     tweet.populate('author_id');
     return await tweet.save();
+    }
+    catch (err) {
+      return err.message
+    }
   }
 }

@@ -19,7 +19,6 @@ export class AppController {
   @Get('authtest')
   returner(@Request() req) {
     console.log(req.user)
-    console.log(req.user.userId)
     return 'Authentication works';
   }
 

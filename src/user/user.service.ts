@@ -70,4 +70,9 @@ export class UserService {
   async findUserForAuthentication(username) {
     return await this.userModel.findOne({ name: username }).select('+password');
   }
+
+  //delete one user
+  async deleteOneUser(id) {
+    return await this.userModel.deleteOne({ _id: id});
+  }
 }

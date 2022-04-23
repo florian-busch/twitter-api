@@ -69,9 +69,11 @@ export class UserController {
     }
   }
 
+  //delete one user
+  @UseGuards(JwtAuthGuard)
   @Delete()
-  deleteOne(): string {
-    return 'This deletes one User';
+  async deleteOne(@Request() req: any): Promise<any> {
+    return this.userService.deleteOneUser(req.user.userId);
   }
 
   @Put()

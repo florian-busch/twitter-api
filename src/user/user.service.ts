@@ -19,10 +19,16 @@ export class UserService {
 
   //retrieve multiple users by id
   async findMultipleUsersByID(query) {
-    const users = await Promise.all(
-      query.ids.split(',').map((userID) => this.userModel.findById(userID)),
-    );
-    return users;
+    try {
+      const users = await Promise.all(
+        query.ids.split(',').map((userID) => this.userModel.findById(userID)),
+      );
+      return users;
+    } catch (err) {
+      return err.message
+    }
+
+
   }
 
   //retrieve single user by username
@@ -69,6 +75,21 @@ export class UserService {
   //find user by name and return password-hash for authentication
   async findUserForAuthentication(username) {
     return await this.userModel.findOne({ name: username }).select('+password');
+  }
+
+  async getInformationAboutAuthorizedUser(id) {
+    return await this.userModel.findById(id);
+  }
+
+  //TODO #10: insert keys for updates dynamically. so far everything is hardcoded
+  //update one user
+  async updateOneUser(id, content) {
+    const update = {
+      name: content.name,
+      verified: content.verified,
+      location: content.location
+    }
+    return await this.userModel.updateOne({ _id: id}, update );
   }
 
   //delete one user

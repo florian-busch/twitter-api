@@ -9,15 +9,33 @@ import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  //find single user with id
+  @Get('/:id')
+  findSingleUserByID(@Param() params): Promise<User> | string {
+    if (Types.ObjectId.isValid(params.id)) {
+      return this.userService.findSingleUserByID(params.id)
+    } else {
+      return 'No valid id'
+    }
+  }
+
   //retrieve multiple users by ids
   @Get()
   findMultipleUsersByID(@Query() query?: string): Promise<unknown> {
     return this.userService.findMultipleUsersByID(query)
   }
 
-  //find multiple users by username --> localhost:3000/users/by?usernames=MongoTest,MongoTest2
+  //find single user by username --> localhost:3000/2/users/by/username/Testuser 2000
+  @Get('/by/username/:username')
+  findSingleUserbyUsername(@Param() params): Promise<User> {
+    return this.userService.findSingleUserbyUsername(params.username);
+  }
+
+  //returns "no valid id" --> why?
+  //find multiple users by username --> 
   @Get('/by')
   findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
+    console.log(query)
     try {
       return this.userService.findMultipleUsersByUsername(query);
     } catch (err) {
@@ -25,20 +43,13 @@ export class UserController {
     }
   }
 
-  //find single user with id
-  @Get('/:id')
-  findSingleUserByID(@Param() params): Promise<User> | string {
-    if (Types.ObjectId.isValid(params.id)) {
-    return this.userService.findSingleUserByID(params.id)
-    } else {
-      return 'No valid id'
-    }
-  }
-
-  //find single user by username
-  @Get('/by/username/:username')
-  findSingleUserbyUsername(@Param() params): Promise<User> {
-    return this.userService.findSingleUserbyUsername(params.username);
+  //TODO: works, but can't be hit because nestjs thinks me is param for @Get('/:id') 
+  //Return information about an authorized user
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  getInformationAboutAuthorizedUser(@Request() req: any): Promise<User> {
+    console.log('ME')
+    return this.userService.getInformationAboutAuthorizedUser(req.user.userId);
   }
 
   //like a tweet -> :id is userId; tweetId comes via json
@@ -56,7 +67,6 @@ export class UserController {
       return 'User authentication failed';
     }
   }
-
 
   //create a User-Account
   @Post()
@@ -76,9 +86,13 @@ export class UserController {
     return this.userService.deleteOneUser(req.user.userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put()
-  updateOne(): string {
-    return 'This updates one User'
+  async updateOne(
+  @Request() req: any,
+  @Body() body: any
+  ): Promise<any> {
+    return this.userService.updateOneUser(req.user.userId, body.content)
   }
 
 }

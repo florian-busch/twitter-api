@@ -8,6 +8,25 @@ import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
 @Controller('2/users')
 export class UserController {
   constructor(private userService: UserService) {}
+  
+  //find multiple users by username --> 
+  @Get('/by')
+  findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
+    console.log(query)
+    try {
+      return this.userService.findMultipleUsersByUsername(query);
+    } catch (err) {
+      return err.message;
+    }
+  }
+
+  //Return information about an authorized user
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  getInformationAboutAuthorizedUser(@Request() req: any): Promise<User> {
+    console.log('ME')
+    return this.userService.getInformationAboutAuthorizedUser(req.user.userId);
+  }
 
   //find single user with id
   @Get('/:id')
@@ -29,27 +48,6 @@ export class UserController {
   @Get('/by/username/:username')
   findSingleUserbyUsername(@Param() params): Promise<User> {
     return this.userService.findSingleUserbyUsername(params.username);
-  }
-
-  //returns "no valid id" --> why?
-  //find multiple users by username --> 
-  @Get('/by')
-  findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
-    console.log(query)
-    try {
-      return this.userService.findMultipleUsersByUsername(query);
-    } catch (err) {
-      return err.message;
-    }
-  }
-
-  //TODO: works, but can't be hit because nestjs thinks me is param for @Get('/:id') 
-  //Return information about an authorized user
-  @UseGuards(JwtAuthGuard)
-  @Get('/me')
-  getInformationAboutAuthorizedUser(@Request() req: any): Promise<User> {
-    console.log('ME')
-    return this.userService.getInformationAboutAuthorizedUser(req.user.userId);
   }
 
   //like a tweet -> :id is userId; tweetId comes via json

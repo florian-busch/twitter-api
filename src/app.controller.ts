@@ -18,7 +18,6 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('authtest')
   returner(@Request() req) {
-    console.log(req.user)
     return 'Authentication works';
   }
 

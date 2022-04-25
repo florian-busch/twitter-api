@@ -60,15 +60,27 @@ export class TweetService {
   //post Tweet and auto-populate Tweet.user by users ObjectId
   async postTweet(req) {
     try {
-    const tweet = new this.tweetModel(req.body);
-    tweet.author_id = req.user.userId;
-    tweet.created_at = new Date().toISOString();
-    //TODO: is populate needed here? return value in production won't be tweet but success message; ID already is saved
-    tweet.populate('author_id');
-    return await tweet.save();
-    }
+      const tweet = new this.tweetModel(req.body);
+      tweet.author_id = req.user.userId;
+      tweet.created_at = new Date().toISOString();
+      //TODO: is populate needed here? return value in production won't be tweet but success message; ID already is saved
+      tweet.populate('author_id');
+      return await tweet.save();
+    } 
     catch (err) {
-      return err.message
+        return err.message
+    }
+  }
+
+  //delete one tweet by authenticated user: params holds tweet id, req holds id of authenticated user
+  async deleteTweet(params, req) {
+    const tweet = await this.tweetModel.findOne({ _id: params });
+    const tweetUserId = await tweet.author_id;
+
+    if (tweetUserId == req.user.userId) {
+      return this.tweetModel.deleteOne( { _id: params })
+    } else {
+      return '/deleteTweet: Authentication failed'
     }
   }
 }

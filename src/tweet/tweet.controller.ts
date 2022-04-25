@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, UseGuards, Request, Query } from '@nestjs/common';
 import { TweetService } from './tweet.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ParseObjectIdPipe } from '../pipes/validateObjectID.pipe';
 
 @Controller('2/tweets')
 export class TweetController {

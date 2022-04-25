@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TweetController } from './tweet.controller';
 import { TweetService } from './tweet.service';
-import { Tweet, TweetSchema } from 'src/schemas/tweet.schema';
+import { Tweet, TweetSchema } from '../schemas/tweet.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({

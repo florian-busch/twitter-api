@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tweet, TweetDocument } from 'src/schemas/tweet.schema';
+import { Tweet, TweetDocument } from '../schemas/tweet.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 

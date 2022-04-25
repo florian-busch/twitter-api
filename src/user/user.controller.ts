@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, Request } from '@nestjs/common';
-import { User } from 'src/schemas/user.schema';
+import { User } from '../schemas/user.schema';
 import { UserService } from './user.service';
 import { Types } from 'mongoose';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ParseObjectIdPipe } from 'src/pipes/validateObjectID.pipe';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ParseObjectIdPipe } from '../pipes/validateObjectID.pipe';
 
 @Controller('2/users')
 export class UserController {
@@ -12,7 +12,6 @@ export class UserController {
   //find multiple users by username --> 
   @Get('/by')
   findMultipleUsersByUsername(@Query() query?: string): Promise<unknown> {
-    console.log(query)
     try {
       return this.userService.findMultipleUsersByUsername(query);
     } catch (err) {
@@ -24,7 +23,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('/me')
   getInformationAboutAuthorizedUser(@Request() req: any): Promise<User> {
-    console.log('ME')
     return this.userService.getInformationAboutAuthorizedUser(req.user.userId);
   }
 

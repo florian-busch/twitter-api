@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
 import { diskStorage } from 'multer';
@@ -18,9 +18,18 @@ export class MediaController {
           cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
         },
       }),
+      fileFilter:  (req: Request, file, cb) => {
+        const validMimetypes = ['image', 'video']
+        const ext = file.mimetype;
+        if (!validMimetypes.some(el => ext.includes(el))) {
+          //TODO: #11 Built a custom exception that sends a response to client with error message (right now client gets 500 internal server error)
+          return cb(new Error('Extension not allowed'), false);
+        }
+        return cb(null, true);
+      }
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: any) {
+    return this.mediaService.saveMediaObject(file, body);
   }
 }

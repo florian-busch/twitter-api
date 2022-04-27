@@ -5,7 +5,6 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()
 export class AppController {
-
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
@@ -20,5 +19,4 @@ export class AppController {
   returner(@Request() req) {
     return 'Authentication works';
   }
-
 }

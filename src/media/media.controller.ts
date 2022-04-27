@@ -1,13 +1,15 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('media')
 export class MediaController {
   constructor(private mediaService: MediaService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('/upload')
   @UseInterceptors(
     FileInterceptor('file', {

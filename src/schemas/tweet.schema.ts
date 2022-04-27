@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { User } from './user.schema';
+import { Media } from './media.schema';
 
 export type TweetDocument = Tweet & Document;
 
@@ -28,9 +29,9 @@ export class Tweet {
   @Prop({ required: true })
   created_at: string;
 
-  //TODO: #6 Type Entities (once implemented); Entities which have been parsed out of the text of the tweet(hashtags, urls, symbols, polls)
-  @Prop()
-  entities: string;
+  //TODO: #6 Type Entities; Entities which have been parsed out of the text of the tweet(hashtags, urls, symbols, polls)
+  @Prop({ type: Types.ObjectId, ref: 'Media' })
+  entities: Media;
 
   //TODO: #3 formatted as geoJSON --> should be type GeolocationCoordinates
   @Prop()

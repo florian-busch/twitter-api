@@ -19,8 +19,8 @@ export class MediaController {
         },
       }),
       fileFilter:  (req: Request, file, cb) => {
-        const validMimetypes = ['image', 'video']
-        const ext = file.mimetype;
+        const validMimetypes: string[] = ['image', 'video'];
+        const ext: string = file.mimetype;
         if (!validMimetypes.some(el => ext.includes(el))) {
           //TODO: #11 Built a custom exception that sends a response to client with error message (right now client gets 500 internal server error)
           return cb(new Error('Extension not allowed'), false);

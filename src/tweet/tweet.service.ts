@@ -23,7 +23,10 @@ export class TweetService {
     //query tweets from db
     const tweets = await Promise.all(
       checkedIds.map((tweetId) =>
-        this.tweetModel.findById(tweetId).populate('author_id'),
+        this.tweetModel
+          .findById(tweetId)
+          .populate('author_id')
+          .populate('entities'),
       ),
     );
     //filter for null values (valid ObjectIds with no corresponding tweet in db) and return tweets
@@ -48,7 +51,8 @@ export class TweetService {
         text: { $regex: regex },
         created_at: { $gte: sevenDaysAgo },
       })
-      .populate('author_id');
+      .populate('author_id')
+      .populate('entities');
     return tweets;
   }
 
@@ -63,12 +67,9 @@ export class TweetService {
       const tweet = new this.tweetModel(req.body);
       tweet.author_id = req.user.userId;
       tweet.created_at = new Date().toISOString();
-      //TODO: is populate needed here? return value in production won't be tweet but success message; ID already is saved
-      tweet.populate('author_id');
       return await tweet.save();
-    } 
-    catch (err) {
-        return err.message
+    } catch (err) {
+      return err.message;
     }
   }
 
@@ -78,9 +79,9 @@ export class TweetService {
     const tweetUserId = await tweet.author_id;
 
     if (tweetUserId == req.user.userId) {
-      return this.tweetModel.deleteOne( { _id: params })
+      return this.tweetModel.deleteOne({ _id: params });
     } else {
-      return '/deleteTweet: Authentication failed'
+      return '/deleteTweet: Authentication failed';
     }
   }
 }

@@ -27,10 +27,10 @@ export class MediaService {
       type: '',
       url: `${data.path}`,
       alt_text: `${body.alt_text}`,
-    }
+    };
 
     //populate type of media object based on files mimetype
-    mediaObject.type = await this.determineFileType(data.mimetype)
+    mediaObject.type = await this.determineFileType(data.mimetype);
 
     const objectForSave = new this.mediaModel(mediaObject);
     //returns saved mediaObject with id that can later be used to populate media-tweet with data

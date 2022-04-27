@@ -20,7 +20,9 @@ export class TweetController {
   }
 
   @Get('/:id/liking_users')
-  async getTweetsLikingUsers(@Param('id', new ParseObjectIdPipe()) params): Promise<unknown> {
+  async getTweetsLikingUsers(
+    @Param('id', new ParseObjectIdPipe()) params,
+  ): Promise<unknown> {
     return this.tweetService.getTweetsLikingUsers(params);
   }
 
@@ -33,7 +35,10 @@ export class TweetController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('/:id')
-  async deleteTweet(@Param('id', new ParseObjectIdPipe()) params, @Request() req: any): Promise<any> {
+  async deleteTweet(
+    @Param('id', new ParseObjectIdPipe()) params,
+    @Request() req: any,
+  ): Promise<any> {
     return this.tweetService.deleteTweet(params, req);
   }
 }

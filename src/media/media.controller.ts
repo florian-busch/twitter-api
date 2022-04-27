@@ -18,7 +18,7 @@ export class MediaController {
           cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
         },
       }),
-      fileFilter:  (req: Request, file, cb) => {
+      fileFilter: (req: Request, file, cb) => {
         const validMimetypes: string[] = ['image', 'video'];
         const ext: string = file.mimetype;
         if (!validMimetypes.some(el => ext.includes(el))) {
@@ -26,7 +26,7 @@ export class MediaController {
           return cb(new Error('Extension not allowed'), false);
         }
         return cb(null, true);
-      }
+      },
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: any) {

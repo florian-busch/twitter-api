@@ -36,5 +36,4 @@ export class MediaService {
     //returns saved mediaObject with id that can later be used to populate media-tweet with data
     return objectForSave.save();
   }
-
 }

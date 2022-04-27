@@ -30,7 +30,7 @@ export class TweetService {
       ),
     );
     //filter for null values (valid ObjectIds with no corresponding tweet in db) and return tweets
-    return tweets.filter(n => n);
+    return tweets.filter((n) => n);
   }
 
   //get tweets based on query from the last 7 days

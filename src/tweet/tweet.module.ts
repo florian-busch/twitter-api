@@ -5,7 +5,9 @@ import { Tweet, TweetSchema } from '../schemas/tweet.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forFeature([{name: Tweet.name, schema: TweetSchema}])],
+  imports: [
+    MongooseModule.forFeature([{ name: Tweet.name, schema: TweetSchema }]),
+  ],
   controllers: [TweetController],
   providers: [TweetService],
 })

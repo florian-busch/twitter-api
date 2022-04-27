@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { User } from './user.schema';
 import { Media } from './media.schema';
+import { User } from './user.schema';
 
 export type TweetDocument = Tweet & Document;
 
